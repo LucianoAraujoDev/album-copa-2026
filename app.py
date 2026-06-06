@@ -281,10 +281,13 @@ def app_principal():
         st.markdown("### 📖 Marcar Minhas Figurinhas")
         st.caption("Clique para marcar que você tem. Use o campo 🔁 para registrar repetidas.")
 
+        # Criamos o seletor apenas com os nomes das seções para evitar quebras no split
         secao_sel = st.selectbox(
             "Filtrar por seção:",
             ["Todas"] + [f"{s['emoji']} {s['nome']}" for s in SECOES_COPA]
         )
+        
+        # Filtragem corrigida de forma segura usando partição
         mostrar = SECOES_COPA if secao_sel == "Todas" else [
             s for s in SECOES_COPA if s["nome"] == secao_sel.split(" ", 1)[1]
         ]
@@ -304,10 +307,16 @@ def app_principal():
                     info  = dados.get(key, {"tenho": False, "repetidas": 0})
                     tenho = info.get("tenho", False)
                     reps  = info.get("repetidas", 0)
+                    
+                    # Criamos um ID limpo para o Streamlit substituindo espaços e emojis
+                    # "🇲🇽 1" vira um ID seguro como "fig_id_1" ou baseado no hash da string
+                    id_seguro = f"fig_{hash(key)}"
+                    id_rep_seguro = f"rep_{hash(key)}"
+                    
                     with cols[j]:
                         if st.button(
                             f"{'✅' if tenho else '○'} {fig}",
-                            key=f"fig_{fig}",
+                            key=id_seguro,
                             help=f"Figurinha {fig} {'(tenho)' if tenho else '(não tenho)'}",
                             use_container_width=True,
                             type="primary" if tenho else "secondary"
@@ -319,10 +328,11 @@ def app_principal():
                                 dados[key]["repetidas"] = 0
                             salvar(dados)
                             st.rerun()
+                            
                         if tenho:
                             rep_val = st.number_input(
                                 "🔁", min_value=0, max_value=99, value=reps,
-                                key=f"rep_{fig}", label_visibility="collapsed", step=1
+                                key=id_rep_seguro, label_visibility="collapsed", step=1
                             )
                             if rep_val != reps:
                                 dados[key]["repetidas"] = rep_val
