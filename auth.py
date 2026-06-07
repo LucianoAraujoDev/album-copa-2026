@@ -8,14 +8,52 @@ import psycopg2
 from psycopg2.extras import DictCursor
 import streamlit as st
 
-# Puxa a URL das Secrets do Streamlit (em desenvolvimento local, pode usar uma variável de ambiente)
-DB_URL = st.secrets.get("SUPABASE_URL") or os.environ.get("SUPABASE_URL")
+# Carrega a URL do banco
+try:
+    DB_URL = st.secrets["SUPABASE_URL"]
+    origem = "streamlit_secrets"
+except Exception:
+    DB_URL = os.environ.get("SUPABASE_URL")
+    origem = "env_var"
+
+
+def _mostrar_diagnostico():
+    st.write("Origem da URL:", origem)
+    st.write("DB_URL existe:", DB_URL is not None)
+
+    if DB_URL:
+        try:
+            host = DB_URL.split("@")[1].split("/")[0]
+            st.write("Host carregado:", host)
+        except Exception:
+            st.write("Não foi possível extrair o host")
 
 
 def _get_conn():
-    # Conecta ao PostgreSQL do Supabase
-    conn = psycopg2.connect(DB_URL)
-    return conn
+    _mostrar_diagnostico()
+
+    try:
+        conn = psycopg2.connect(
+            DB_URL,
+            connect_timeout=10,
+            sslmode="require"
+        )
+
+        st.success("Conexão com PostgreSQL realizada!")
+        return conn
+
+    except Exception as e:
+        st.error(f"Tipo do erro: {type(e).__name__}")
+        st.error(f"Mensagem: {str(e)}")
+
+        if DB_URL:
+            try:
+                host = DB_URL.split("@")[1].split("/")[0]
+                st.error(f"Host utilizado: {host}")
+            except Exception:
+                pass
+
+        raise
 
 
 def init_db():
