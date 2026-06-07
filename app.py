@@ -4,8 +4,11 @@ import os
 from data import SECOES_COPA
 from utils import calcular_estatisticas
 from auth import (
-    cadastrar_usuario, autenticar_usuario,
-    carregar_dados_usuario, salvar_dados_usuario
+    init_db,
+    cadastrar_usuario,
+    autenticar_usuario,
+    carregar_dados_usuario,
+    salvar_dados_usuario
 )
 
 # --- Configuração da página ---
@@ -15,6 +18,12 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
+# Inicializa as tabelas no Supabase
+
+if "db_inicializado" not in st.session_state:
+    init_db()
+    st.session_state.db_inicializado = True
 
 # --- CSS Global ---
 st.markdown("""
