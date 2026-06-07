@@ -3,8 +3,7 @@
 
 # Lista auxiliar para mapear o prefixo/identificador de numeração de cada seção
 ESTRUTURA_ALBUM = [
-    {"nome": "Abertura", "emoji": "🌟", "prefixo": "🌟", "tamanho": 18},
-    {"nome": "Estádios", "emoji": "🏟️", "prefixo": "🏟️", "tamanho": 18},
+    {"nome": "Especiais", "emoji": "FWC", "prefixo": "FWC", "tamanho": 18},
     {"nome": "México", "emoji": "🇲🇽", "prefixo": "MEX", "tamanho": 20},
     {"nome": "África do Sul", "emoji": "🇿🇦", "prefixo": "RSA", "tamanho": 20},
     {"nome": "Coréia do Sul", "emoji": "🇰🇷", "prefixo": "KOR", "tamanho": 20},
@@ -53,7 +52,6 @@ ESTRUTURA_ALBUM = [
     {"nome": "Croácia", "emoji": "🇭🇷", "prefixo": "CRO", "tamanho": 20},
     {"nome": "Gana", "emoji": "🇬🇭", "prefixo": "GHA", "tamanho": 20},
     {"nome": "Panamá", "emoji": "🇵🇦", "prefixo": "PAN", "tamanho": 20},
-    {"nome": "Encerramento", "emoji": "🏅", "prefixo": "🏅", "tamanho": 14},
 ]
 
 # Construção dinâmica da lista final SECOES_COPA
